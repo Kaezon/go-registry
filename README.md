@@ -1,6 +1,6 @@
 # go-registry
 
-## A thread-safe generic registry type for Go applications
+## A thread-safe generic registry interface for Go applications
 
 Because adding a registry pattern to each project can result in a lot of code duplication,
 I decided to write a basic registry that could handle being used across multiple goroutines.
