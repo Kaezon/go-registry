@@ -2,7 +2,6 @@ package registry
 
 import (
 	"fmt"
-	"sync"
 
 	"github.com/google/uuid"
 )
@@ -49,12 +48,9 @@ type Registry interface {
 
 type registry struct {
 	registry map[string]interface{}
-	mutex    sync.Mutex
 }
 
 func (reg *registry) Deregister(id string) error {
-	reg.mutex.Lock()
-	defer reg.mutex.Unlock()
 	if _, ok := reg.registry[id]; ok {
 		delete(reg.registry, id)
 		return nil
@@ -63,8 +59,6 @@ func (reg *registry) Deregister(id string) error {
 }
 
 func (reg *registry) Get(id string) (interface{}, error) {
-	reg.mutex.Lock()
-	defer reg.mutex.Unlock()
 	if data, ok := reg.registry[id]; ok {
 		return data, nil
 	}
@@ -72,9 +66,6 @@ func (reg *registry) Get(id string) (interface{}, error) {
 }
 
 func (reg *registry) Prune() {
-	reg.mutex.Lock()
-	defer reg.mutex.Unlock()
-
 	for key, value := range reg.registry {
 		if value == nil {
 			delete(reg.registry, key)
@@ -83,9 +74,6 @@ func (reg *registry) Prune() {
 }
 
 func (reg *registry) Register(data interface{}) string {
-	reg.mutex.Lock()
-	defer reg.mutex.Unlock()
-
 	// Just in case the impossible happens and there is an id colision
 	for {
 		newUUID, _ := uuid.NewRandom()
@@ -98,9 +86,6 @@ func (reg *registry) Register(data interface{}) string {
 }
 
 func (reg *registry) RegisterName(data interface{}, identifier string) error {
-	reg.mutex.Lock()
-	defer reg.mutex.Unlock()
-
 	if _, ok := reg.registry[identifier]; !ok {
 		reg.registry[identifier] = data
 		return nil
