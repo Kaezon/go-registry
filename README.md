@@ -1,6 +1,6 @@
 # go-registry
 
-## An generic interface for the registry pattern
+## A generic interface for the registry pattern
 
 Because adding a registry pattern to each project can result in a lot of code duplication,
 I decided to write a basic registry to slim down other projects.
